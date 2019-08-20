@@ -9,9 +9,25 @@ public class GameStatus : MonoBehaviour
     [SerializeField] int pointsPerBlockDestroyed = 1;
     [SerializeField] int currentScore = 0;
     [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] bool isAutoPlayEnabled;
 
     private void Start() {
         scoreText.text = currentScore.ToString();
+    }
+
+    private void Awake() {
+        int gameStatusCount = FindObjectsOfType<GameStatus>().Length;
+        if (gameStatusCount > 1) {
+            gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
+        else {
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
+    public void ResetGame() {
+        Destroy(gameObject);
     }
 
     // Update is called once per frame
@@ -19,13 +35,14 @@ public class GameStatus : MonoBehaviour
     {
         Time.timeScale = gameSpeed;
     }
-
-
     public void AddToScore()
     {
         currentScore += pointsPerBlockDestroyed;
         scoreText.text = currentScore.ToString();
     }
 
+    public bool IsAutoPlayEnabled() {
+        return isAutoPlayEnabled;
+    }
 
 }
